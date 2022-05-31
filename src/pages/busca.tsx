@@ -65,10 +65,11 @@ const Busca = () => {
       >
         {[1, 2, 3].map((item) => (
           <Card
+            key={item}
             style={{ width: "100%" }}
             actions={[
-              <Typography>Agendar</Typography>,
-              <Typography>Detalhes</Typography>,
+              <Typography key={item}>Agendar</Typography>,
+              <Typography key={item}>Detalhes</Typography>,
             ]}
             extra={
               <Typography style={{ fontWeight: "bold" }}>R$ 120,00</Typography>
