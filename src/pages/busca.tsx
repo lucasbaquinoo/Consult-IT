@@ -3,8 +3,18 @@ import {
   EllipsisOutlined,
   SettingOutlined,
 } from "@ant-design/icons";
-import { Layout, Typography, Select, Card, Avatar, Rate, Tag } from "antd";
+import {
+  Layout,
+  Typography,
+  Select,
+  Card,
+  Avatar,
+  Rate,
+  Tag,
+  Button,
+} from "antd";
 import Meta from "antd/lib/card/Meta";
+import { useRouter } from "next/router";
 
 const { Option } = Select;
 
@@ -17,6 +27,7 @@ const onSearch = (value: string) => {
 };
 
 const Busca = () => {
+  const router = useRouter();
   return (
     <>
       <Layout.Header
@@ -68,8 +79,13 @@ const Busca = () => {
             key={item}
             style={{ width: "100%" }}
             actions={[
-              <Typography key={item}>Agendar</Typography>,
-              <Typography key={item}>Detalhes</Typography>,
+              <Button
+                type="text"
+                onClick={() => router.push("/usuario/antonio")}
+                key={item}
+              >
+                Detalhes
+              </Button>,
             ]}
             extra={
               <Typography style={{ fontWeight: "bold" }}>R$ 120,00</Typography>
