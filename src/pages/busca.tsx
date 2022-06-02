@@ -12,9 +12,12 @@ import {
   Rate,
   Tag,
   Button,
+  Radio,
 } from "antd";
 import Meta from "antd/lib/card/Meta";
 import { useRouter } from "next/router";
+import { useState } from "react";
+import { users } from "../data/users";
 
 const { Option } = Select;
 
@@ -28,6 +31,16 @@ const onSearch = (value: string) => {
 
 const Busca = () => {
   const router = useRouter();
+  const [option, setOption] = useState<string>("");
+  console.log(option);
+
+  const handleCheckOption = (value: string) => {
+    if (value === option) {
+      setOption("");
+    } else {
+      setOption(value);
+    }
+  };
   return (
     <>
       <Layout.Header
@@ -49,7 +62,7 @@ const Busca = () => {
         <Select
           style={{ width: "100%" }}
           showSearch
-          placeholder="Select a person"
+          placeholder="Selecione um profissional"
           optionFilterProp="children"
           onChange={onChange}
           onSearch={onSearch}
@@ -59,9 +72,11 @@ const Busca = () => {
               .includes(input.toLowerCase())
           }
         >
-          <Option value="jack">Jack</Option>
-          <Option value="lucy">Lucy</Option>
-          <Option value="tom">Tom</Option>
+          {users.map((user) => (
+            <Option key={user.id} value={user.id}>
+              {user.name}
+            </Option>
+          ))}
         </Select>
       </Layout.Header>
       <Layout.Content
@@ -70,48 +85,66 @@ const Busca = () => {
           justifyContent: "start",
           display: "flex",
           flexDirection: "column",
-          height: "100vh",
+          minHeight: "100vh",
           background: "#FCFCFC",
         }}
       >
-        {[1, 2, 3].map((item) => (
+        <Radio.Group
+          onChange={(event) => handleCheckOption(event.target.value)}
+          style={{ marginBottom: "12px" }}
+          buttonStyle="solid"
+          value={option}
+        >
+          <Radio.Button value="frontend">Frontend</Radio.Button>
+          <Radio.Button value="design">Design</Radio.Button>
+          <Radio.Button value="devops">DevOps</Radio.Button>
+          <Button type="link" onClick={() => handleCheckOption(option)}>
+            Limpar
+          </Button>
+        </Radio.Group>
+        {users.map((user) => (
           <Card
-            key={item}
-            style={{ width: "100%" }}
+            key={user.id}
+            style={{ width: "100%", marginBottom: "12px" }}
             actions={[
               <Button
                 type="text"
-                onClick={() => router.push("/usuario/antonio")}
-                key={item}
+                onClick={() => router.push(`/usuario/${user.id}`)}
+                key={user.id}
               >
                 Detalhes
               </Button>,
             ]}
             extra={
-              <Typography style={{ fontWeight: "bold" }}>R$ 120,00</Typography>
+              <Typography style={{ fontWeight: "bold" }}>
+                R$ {user.price}/sessão
+              </Typography>
             }
           >
             <Meta
-              avatar={<Avatar src="https://joeschmoe.io/api/v1/random" />}
+              avatar={<Avatar src={user.avatar_url} />}
               title={
                 <>
                   <Typography style={{ fontSize: 14 }}>
-                    Luigi | UX/UI Design
+                    {user.name} | {user.role}
                   </Typography>
-                  <Rate value={4.5} />
+                  <Rate value={user.rate} />
                 </>
               }
               description={
                 <>
-                  <Tag>DesignOps</Tag>
-                  <Tag>Direcionamento</Tag>
+                  {user.tags.map((tag) => (
+                    <Tag key={tag} color="blue">
+                      {tag}
+                    </Tag>
+                  ))}
                 </>
               }
             />
           </Card>
         ))}
       </Layout.Content>
-      <Layout.Footer>Footer</Layout.Footer>
+      <Layout.Footer></Layout.Footer>
     </>
   );
 };
